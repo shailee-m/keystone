@@ -82,9 +82,11 @@ password.prototype.addToSchema = function (schema) {
 		if (!this.isModified(field.path) || !this[needs_hashing]) {
 			return next();
 		}
+		// reset the [needs_hashing] flag so that new values can't be hashed more than once
+		// (inherited models double up on pre save handlers for password fields)
+		this[needs_hashing] = false;
 		if (!this.get(field.path)) {
 			this.set(field.path, undefined);
-			this[needs_hashing] = false;
 			return next();
 		}
 		var item = this;
@@ -98,9 +100,6 @@ password.prototype.addToSchema = function (schema) {
 				}
 				// override the cleartext password with the hashed one
 				item.set(field.path, hash);
-				// reset [needs_hashing] so that new values can't be hashed more than once
-				// (inherited models double up on pre save handlers for password fields)
-				item[needs_hashing] = false;
 				next();
 			});
 		});
@@ -162,44 +161,37 @@ password.prototype.compare = function (item, candidate, callback) {
  * Asynchronously confirms that the provided password is valid
  */
 password.prototype.validateInput = function (data, callback) {
+	var detail = '';
+	var result = true;
 	var min = this.options.min;
-	var max = this.options.max;
+	var max = this.options.max || 72;
 	var complexity = this.options.complexity;
 	var confirmValue = this.getValueFromData(data, '_confirm');
 	var passwordValue = this.getValueFromData(data);
-
-	var validation = validate(passwordValue, confirmValue, min, max, complexity);
-
-	utils.defer(callback, validation.result, validation.detail);
-};
-
-var validate = password.validate = function (pass, confirm, min, max, complexity) {
-	var detail = '';
-	var result = true;
-	max = max || 72;
-	if (confirm !== undefined
-		&& pass !== confirm) {
+	if (confirmValue !== undefined
+		&& passwordValue !== confirmValue) {
 		detail = 'passwords must match\n';
 	}
 
-	if (min && typeof pass === 'string' && pass.length < min) {
+	if (min && typeof passwordValue === 'string' && passwordValue.length < min) {
 		detail += 'password must be longer than ' + min + ' characters\n';
 	}
 
-	if (max && typeof pass === 'string' && pass.length > max) {
+	if (max && typeof passwordValue === 'string' && passwordValue.length > max) {
 		detail += 'password must not be longer than ' + max + ' characters\n';
 	}
 
 	for (var prop in complexity) {
-		if (complexity[prop] && typeof pass === 'string') {
-			var complexityCheck = (regexChunk[prop]).test(pass);
+		if (complexity[prop] && typeof passwordValue === 'string') {
+			var complexityCheck = (regexChunk[prop]).test(passwordValue);
 			if (!complexityCheck) {
 				detail += detailMsg[prop] + '\n';
 			}
 		}
 	}
 	result = detail.length === 0;
-	return { result, detail };
+
+	utils.defer(callback, result, detail);
 };
 
 /**

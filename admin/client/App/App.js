@@ -6,14 +6,14 @@
 import React from 'react';
 import { Container } from './elemental';
 import { Link } from 'react-router';
-import { css } from 'glamor';
+import { css, StyleSheet } from 'aphrodite/no-important';
 
 import MobileNavigation from './components/Navigation/Mobile';
 import PrimaryNavigation from './components/Navigation/Primary';
 import SecondaryNavigation from './components/Navigation/Secondary';
 import Footer from './components/Footer';
 
-const classes = {
+const classes = StyleSheet.create({
 	wrapper: {
 		display: 'flex',
 		flexDirection: 'column',
@@ -22,7 +22,7 @@ const classes = {
 	body: {
 		flexGrow: 1,
 	},
-};
+});
 
 const App = (props) => {
 	const listsByPath = require('../utils/lists').listsByPath;
@@ -77,14 +77,14 @@ const App = (props) => {
 			<main className={css(classes.body)}>
 				{children}
 			</main>
-			<Footer
-				appversion={Keystone.appversion}
-				backUrl={Keystone.backUrl}
-				brand={Keystone.brand}
-				User={Keystone.User}
-				user={Keystone.user}
-				version={Keystone.version}
-			/>
+			{/*<Footer
+							appversion={Keystone.appversion}
+							backUrl={Keystone.backUrl}
+							brand={Keystone.brand}
+							User={Keystone.User}
+							user={Keystone.user}
+							version={Keystone.version}
+						/>*/}
 		</div>
 	);
 };

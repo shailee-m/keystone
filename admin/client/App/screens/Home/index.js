@@ -72,15 +72,15 @@ var HomeView = React.createClass({
 								);
 							})}
 							{/* Render orphaned lists */}
-							{Keystone.orphanedLists.length ? (
-								<Section label="Other" icon="octicon-database">
-									<Lists
-										counts={this.props.counts}
-										lists={Keystone.orphanedLists}
-										spinner={spinner}
-									/>
-								</Section>
-							) : null}
+							{/*{Keystone.orphanedLists.length ? (
+															<Section label="Other" icon="octicon-database">
+																<Lists
+																	counts={this.props.counts}
+																	lists={Keystone.orphanedLists}
+																	spinner={spinner}
+																/>
+															</Section>
+														) : null}*/}
 						</div>
 					)}
 				</div>
