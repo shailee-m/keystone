@@ -160,7 +160,6 @@ var EditForm = React.createClass({
 	renderKeyOrId () {
 		var className = 'EditForm__key-or-id';
 		var list = this.props.list;
-
 		if (list.nameField && list.autokey && this.props.data[list.autokey.path]) {
 			return (
 				<div className={className}>
@@ -178,6 +177,7 @@ var EditForm = React.createClass({
 			);
 		} else if (list.autokey && this.props.data[list.autokey.path]) {
 			return (
+
 				<div className={className}>
 					<span className="EditForm__key-or-id__label">{list.autokey.path}: </span>
 					<div className="EditForm__key-or-id__field">
@@ -186,6 +186,9 @@ var EditForm = React.createClass({
 				</div>
 			);
 		} else if (list.nameField) {
+			// if(list.nameField.label='Slug'){
+				// var datalist 
+			// }
 			return (
 				<div className={className}>
 					<span className="EditForm__key-or-id__label">ID: </span>
@@ -243,10 +246,29 @@ var EditForm = React.createClass({
 			}
 
 			if (el.type === 'field') {
+				// if(el.field=='status' || el.field=='Status'){
+				// }
 				var field = this.props.list.fields[el.field];
 				var props = this.getFieldProps(field);
 				if (typeof Fields[field.type] !== 'function') {
 					return React.createElement(InvalidFieldType, { type: field.type, path: field.path, key: field.path });
+				}
+				if(el.field=='slug'){
+					var slugOptions = /*{ 
+						options:*/ [{ 
+						value: this.props.data['title'] || this.props.data['name'],
+						label: this.props.data['title'] || this.props.data['name']
+					}]/*this.props.data['title'] || this.props.data['name']*/
+					/*}*/
+					
+					props.options = [this.props.data['title'] || this.props.data['name']]
+					props.list = 'slugList'
+					props.value=props.value ? props.value : (this.props.data['title'] || this.props.data['name'])
+					// props.ops = slugOptions;
+					var newEle = React.createElement(Fields['text'], props);
+					return newEle;
+				    //return /*[*/React.createElement(Fields['select'], props)/*,React.createElement('datalist',{})];*/
+					// return React.createElement('reactInputDatalist',props)/*<reactInputDatalist list="slugList" options={slugOptions} />*/
 				}
 				props.key = field.path;
 				if (index === 0 && this.state.focusFirstField) {
@@ -368,6 +390,15 @@ var EditForm = React.createClass({
 				{elements}
 			</div>
 		) : null;
+	},
+	autofill(id,data){
+		return(
+			<datalist id={id}>
+                {data.map((item) =>
+                    <option value={item} />
+                )}
+            </datalist>
+			)
 	},
 	render () {
 		return (

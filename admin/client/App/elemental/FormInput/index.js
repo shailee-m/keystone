@@ -24,6 +24,8 @@ class FormInput extends Component {
 			multiline,
 			noedit,
 			size,
+			list,
+			options,
 			...props
 		} = this.props;
 
@@ -46,14 +48,32 @@ class FormInput extends Component {
 
 		const setRef = (n) => (this.target = n);
 		const Tag = multiline ? 'textarea' : 'input';
+		debugger;
+		if(props.options){
+			return (
+				<div>
+				<Tag
+				ref={setRef}
+				disabled={props.disabled}
+				{...props}
+			/>
 
+			<datalist id="sluglist">
+					<option value={props.options[0]}></option>
+				</datalist>
+				</div>)
+				
+
+			}else {
 		return (
 			<Tag
 				ref={setRef}
 				disabled={props.disabled}
 				{...props}
 			/>
+			
 		);
+	}
 	}
 };
 

@@ -61,6 +61,7 @@ var ItemView = React.createClass({
 	},
 	// Called when a new item is created
 	onCreate (item) {
+		debugger;
 		// Hide the create form
 		this.toggleCreateModal(false);
 		// Redirect to newly created item path

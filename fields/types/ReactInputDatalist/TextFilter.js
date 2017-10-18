@@ -1,5 +1,6 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
+import reactInputDatalist from  'react-datalist';
 
 import {
 	FormField,
@@ -63,7 +64,7 @@ var TextFilter = React.createClass({
 		const { field, filter } = this.props;
 		const mode = MODE_OPTIONS.filter(i => i.value === filter.mode)[0];
 		const placeholder = field.label + ' ' + mode.label.toLowerCase() + '...';
-		debugger;
+
 		return (
 			<div>
 				<FormField>
@@ -90,6 +91,15 @@ var TextFilter = React.createClass({
 					options={this.props.options}
 					value={this.props.filter.value}
 				/>
+				{/*<reactInputDatalist
+								autoFocus
+									onChange={this.updateValue}
+									placeholder={placeholder}
+									ref="focusTarget"
+									list="sluglist"
+									options={this.props.options}
+									value={this.props.options[0]}
+								/>*/}
 			</div>
 		);
 	},

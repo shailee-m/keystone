@@ -29,6 +29,8 @@ var DEFAULT_OPTION_KEYS = [
 	'collapse',
 	'dependsOn',
 	'autoCleanup',
+	// 'list',
+	'options',
 ];
 
 /**
